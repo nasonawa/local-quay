@@ -1,0 +1,21 @@
+http_listen_addr: ":8081"
+log_level: info
+indexer:
+  connstring: host=clairdb port=5432 dbname=clair user=clairuser password=clairpass sslmode=disable
+  scanlock_retry: 10
+  layer_scan_concurrency: 5
+  migrations: true
+matcher:
+  connstring: host=clairdb port=5432 dbname=clair user=clairuser password=clairpass sslmode=disable
+  max_conn_pool: 100
+  migrations: true
+  indexer_addr: clair-indexer
+notifier:
+  connstring: host=clairdb port=5432 dbname=clair user=clairuser password=clairpass sslmode=disable
+  delivery_interval: 1m
+  poll_interval: 5m
+  migrations: true
+auth:
+  psk:
+    key: "YTI4ZTliMzlmZGc5ZA=="
+    iss: ["quay"]

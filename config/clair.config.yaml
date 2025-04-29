@@ -1,0 +1,27 @@
+BUILDLOGS_REDIS:
+    host: quaycache
+    password: pass1234
+    port: 6379
+DB_CONNECTION_ARGS:
+    sslmode: disable
+DB_URI: postgresql://quayuser:pass1234@quaydb/registry-database
+DATABASE_SECRET_KEY: a8c2744b-7004-4af2-bcee-e417e7bdd235
+DISTRIBUTED_STORAGE_CONFIG:
+    default:
+        - LocalStorage
+        - storage_path: /datastorage/registry
+DISTRIBUTED_STORAGE_DEFAULT_LOCATIONS: []
+DISTRIBUTED_STORAGE_PREFERENCE:
+    - default
+CREATE_NAMESPACE_ON_PUSH: true
+FEATURE_MAILING: false
+SETUP_COMPLETE: true
+FEATURE_SECURITY_SCANNER: true
+SECURITY_SCANNER_INDEXING_INTERVAL: 30
+SECURITY_SCANNER_V4_ENDPOINT: http://clair-svc:8081
+SECURITY_SCANNER_V4_PSK: 'YTI4ZTliMzlmZGc5ZA=='
+SERVER_HOSTNAME: quay-server.example.com:8080
+USER_EVENTS_REDIS:
+    host: quaycache
+    password: pass1234
+    port: 6379

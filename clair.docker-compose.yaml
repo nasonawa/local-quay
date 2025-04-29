@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  quay:
+    image: registry.redhat.io/quay/quay-rhel8:v3.10.10-14
+    hostname: quay-server.example.com
+    networks:
+      - local-quay
+    no_hosts: true
+    ports:
+      - 8080:8080 
+    volumes:
+      - ./config/clair.config.yaml:/conf/stack/config.yaml:Z
+    depends_on:
+       quaydb:
+          condition: service_healthy
+       quaycache:
+          condition: service_healthy
+
+  quaydb:
+    image: docker.io/postgres:13
+    networks:
+      - local-quay
+    environment:
+      - POSTGRES_USER=quayuser 
+      - POSTGRES_PASSWORD=pass1234
+      - POSTGRES_DB=registry-database
+    volumes:
+      - ./postgresql/postgresql-quay.sh:/docker-entrypoint-initdb.d/postgresql-quay.sh:Z
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+
+  quaycache:
+    image: redis 
+    command: redis-server --requirepass pass1234
+    networks:
+      - local-quay
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "pass1234", "ping"]
+
+  clairdb:
+    image: docker.io/postgres:13
+    hostname: clairdb
+    networks:
+      - clair-net
+    environment:
+      - POSTGRES_USER=clairuser 
+      - POSTGRES_PASSWORD=clairpass
+      - POSTGRES_DB=clair
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+
+  clair-svc:
+    hostname: clair-svc
+    networks:
+      - local-quay
+      - clair-net
+    image: registry.redhat.io/quay/clair-rhel8:v3.10.10-4
+    environment:
+      - CLAIR_CONF=/clair/config.yaml
+      - CLAIR_MODE=combo
+    volumes:
+      -  ./clair:/clair:Z
+    depends_on:
+       clairdb:
+          condition: service_healthy
+
+networks:
+  local-quay:
+    driver: bridge
+  clair-net:
+    driver: bridge
