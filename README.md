@@ -33,7 +33,7 @@ Before you begin, ensure you have the following installed and configured on your
 
     * **Podman:**
         ```bash
-        podman-compose -f <file-name> up -d
+        podman-compose -f <file-name> up
         ```
     * **Docker:**
         ```bash
