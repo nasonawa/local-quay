@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   quay:
-    image: registry.redhat.io/quay/quay-rhel8:v3.10.10-14
+    image: ${QUAY_IMAGE}
     hostname: quay-server.example.com
     networks:
       - local-quay
